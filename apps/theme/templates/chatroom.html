@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Chatty</title>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <!-- Header -->
+        <div class="h-screen mx-auto w-full">
+            <h2 class="py-4 text-center text-3xl font-bold leading-9 tracking-tight
+                text-white bg-blue-600">
+                Chats
+            </h2>
+        </div>
+
+        <div class="mb-8">
+            <div id="chat"
+                 class="flex md:inline w-auto rounded-md p-2 mx-2 my-2 bg-gray-200 p-4 text-xl
+                        text-gray-900 font-semibold">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </div>
+        </div>
+
+        <!-- Input and Submit -->
+        <div id="chat-input" class="sticky top-lvh bottom-0 flex flex-row space-x-2 p-2">
+            <input id="chat-message-input"
+                name="message"
+                type="text"
+                autocomplete="text"
+                placeholder="Type a message..."
+                class="w-5/6 rounded-sm border-0 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400
+                       placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold font-semibold
+                       text-2xl focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+            >
+            <button id="chat-message-submit"
+                    type="submit"
+                    value="Send"
+                    class="w-1/6 rounded-sm bg-blue-600 px-3 py-4 text-xl text-center font-semibold leading-6
+                           text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2
+                           focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+                Send
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block include_js %}
+    {{ request.user.username|json_script:"request-user" }}
+{% endblock %}
+
+{% block domready %}
+    <script src="{% static 'js/websocket.js' %}"></script>
+{% endblock %}

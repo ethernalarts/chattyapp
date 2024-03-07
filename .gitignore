@@ -1,0 +1,5 @@
+.env
+.chattyvenv
+.idea
+db.sqlite3
+__pycache__/
