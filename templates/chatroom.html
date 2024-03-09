@@ -6,42 +6,46 @@
 {% endblock %}
 
 {% block content %}
-    <div>
+    <div class="flex flex-col h-screen justify-between">
         <!-- Header -->
-        <div class="h-screen mx-auto w-full">
-            <h2 class="py-4 text-center text-3xl font-bold leading-9 tracking-tight
-                text-white bg-blue-600">
+        <div class="mx-auto w-full">
+            <h2 class="py-4 text-center text-3xl font-bold leading-9 tracking-tight text-white bg-blue-600">
                 Chats
             </h2>
         </div>
 
-        <div class="mb-8">
-            <div id="chat"
-                 class="flex md:inline w-auto rounded-md p-2 mx-2 my-2 bg-gray-200 p-4 text-xl
-                        text-gray-900 font-semibold">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </div>
+        <!-- chat container -->
+        <div id="chat" class="flex-1 flex-col mb-auto mx-2 mt-6">
         </div>
 
         <!-- Input and Submit -->
-        <div id="chat-input" class="sticky top-lvh bottom-0 flex flex-row space-x-2 p-2">
+        <div id="chat-input" class="flex flex-row space-x-2 p-2">
             <input id="chat-message-input"
                 name="message"
                 type="text"
-                autocomplete="text"
+                autocomplete="off"
                 placeholder="Type a message..."
                 class="w-5/6 rounded-sm border-0 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400
                        placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold font-semibold
-                       text-2xl focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
+                       text-lg focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:leading-6"
             >
+
+            <!-- Send Message button -->
             <button id="chat-message-submit"
                     type="submit"
-                    value="Send"
                     class="w-1/6 rounded-sm bg-blue-600 px-3 py-4 text-xl text-center font-semibold leading-6
                            text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2
                            focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-                Send
+                <!-- Send Message icon -->
+                <span class="inline-flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         fill="currentColor"
+                         class="w-7 h-7 mt-1 text-white font-extrabold">
+                        <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
+                    </svg>
+                </span>
             </button>
         </div>
     </div>

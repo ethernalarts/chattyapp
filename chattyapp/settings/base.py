@@ -28,13 +28,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    "apps.chat.apps.ChatConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps.chat.apps.ChatConfig",
     "tailwind",
     "apps.theme.apps.ThemeConfig",
     "django_browser_reload",
@@ -49,7 +50,7 @@ INTERNAL_IPS = [
 
 NPM_BIN_PATH = r"C:/Program Files/nodejs/npm.cmd"
 
-TAILWIND_CSS_PATH = 'css/dist/styles.css'
+TAILWIND_CSS_PATH = "css/dist/styles.css"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -61,6 +62,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 ROOT_URLCONF = "chattyapp.urls"
 
@@ -79,20 +86,19 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
-CHAT_STATIC = os.path.join(BASE_DIR, "apps/chat/static/")
-THEME_STATIC = os.path.join(BASE_DIR, "apps/theme/static/")
+CHAT_STATIC = os.path.join(BASE_DIR, "apps/chat/static/chat/")
+THEME_STATIC = os.path.join(BASE_DIR, "apps/theme/static/theme/")
 STATICFILES_DIRS = [THEME_STATIC, CHAT_STATIC]
 
 STATIC_URL = "/static/"
 
 # Template Directories
 ROOT = os.path.join(BASE_DIR, "templates")
-THEME = os.path.join(BASE_DIR, "apps/theme/templates")
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [THEME],
+        "DIRS": [ROOT],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -106,7 +112,7 @@ TEMPLATES = [
 ]
 
 # WSGI_APPLICATION = "chattyapp.wsgi.application"
-ASGI_APPLICATION = 'chattyapp.asgi.application'
+ASGI_APPLICATION = "chattyapp.asgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
