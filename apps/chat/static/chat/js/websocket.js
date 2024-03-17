@@ -21,12 +21,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		const source = isMe ? 'me' : 'other';
 		const name = isMe ? 'Me' : data.user;
 
-        chat.innerHTML += '<div class="block w-full max-w-md md:max-w-2xl float-left rounded-md my-2 bg-gray-400'
-                        + ' p-4 pb-0 pt-2 text-lg text-gray-800 font-semibold">'
+        chat.innerHTML += '<div class="w-full max-w-md md:max-w-2xl float-left rounded-md mb-2 mt-6 bg-gray-400'
+                        + ' p-4 pb-0 pt-2 text-md text-gray-800 font-semibold">'
                         + '<strong>' + name + '</strong><br>'
                         + data.message
-                        + '<br><span class="text-gray-50 text-sm float-right">' + datetime + '</span><br>'
-                        + '</div>';
+                        + '<br><span class="text-gray-50 text-sm italic float-right">' + datetime + '</span><br>'
+                        + '</div>'
+                        + '\n';
         chat.scrollTop = chat.scrollHeight;
     };
 

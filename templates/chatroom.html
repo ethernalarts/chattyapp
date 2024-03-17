@@ -8,18 +8,18 @@
 {% block content %}
     <div class="flex flex-col h-screen justify-between">
         <!-- Header -->
-        <div class=" mx-auto w-full">
+        <div class="z-50 mx-auto w-full">
             <h2 class="py-4 text-center text-3xl font-bold leading-9 tracking-tight text-white bg-blue-600">
                 Chat Room
             </h2>
         </div>
 
         <!-- chat container -->
-        <div id="chat" class="flex-1 flex-col mb-auto mx-2 mt-6">
+        <div id="chat" class="z-10 overflow-y-auto flex flex-1 flex-col ml-4 mx-0">
         </div>
 
         <!-- Input and Submit -->
-        <div id="chat-input" class="flex flex-row space-x-2 p-2">
+        <div id="chat-input" class="z-50 sticky flex flex-row space-x-2 pt-0 p-2">
             <input id="chat-message-input"
                 name="message"
                 type="text"
