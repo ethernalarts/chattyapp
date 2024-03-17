@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 
-# @login_required
+@login_required
 def index(request):
     return HttpResponseRedirect(reverse("chat:chat-room"))
 

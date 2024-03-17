@@ -18,16 +18,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         const dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
 		const datetime = new Date(data.datetime).toLocaleString('en', dateOptions);
 		const isMe = data.user === requestUser;
-		const source = isMe ? 'me' : 'other';
+		const source = isMe ? 'ml-auto mr-4 text-gray-100 bg-green-800' : 'float-left ml-4 text-green-800 bg-green-400';
 		const name = isMe ? 'Me' : data.user;
 
-        chat.innerHTML += '<div class="w-full max-w-md md:max-w-2xl float-left rounded-md mb-2 mt-6 bg-gray-400'
-                        + ' p-4 pb-0 pt-2 text-md text-gray-800 font-semibold">'
+        chat.innerHTML += '<div class="w-full max-w-md md:max-w-2xl rounded-md mb-2'
+                        + ' p-4 pb-0 pt-2 text-md font-semibold ' + source + '">'
                         + '<strong>' + name + '</strong><br>'
                         + data.message
                         + '<br><span class="text-gray-50 text-sm italic float-right">' + datetime + '</span><br>'
-                        + '</div>'
-                        + '\n';
+                        + '</div>';
         chat.scrollTop = chat.scrollHeight;
     };
 

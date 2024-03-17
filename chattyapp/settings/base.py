@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     "channels_postgres",
 ]
 
+INSTALLED_APPS += [
+    'widget_tweaks',
+]
+
 TAILWIND_APP_NAME = "apps.theme"
 
 INTERNAL_IPS = [
