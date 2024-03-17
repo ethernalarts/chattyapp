@@ -10,13 +10,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const chat = document.querySelector('#chat');
     const input = document.querySelector('#chat-message-input');
     const submitButton = document.querySelector('#chat-message-submit');
+    const requestUser = JSON.parse(document.getElementById('request-user').textContent);
 
     chatSocket.onmessage = function(event) {
         const data = JSON.parse(event.data);
-        console.log(data.message)
-        chat.innerHTML += '<div class="w-auto md:max-w-2xl float-left rounded-md my-2 bg-gray-400 p-4 text-lg'
-                        + ' text-gray-800 font-semibold">'
+
+        const dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+		const datetime = new Date(data.datetime).toLocaleString('en', dateOptions);
+		const isMe = data.user === requestUser;
+		const source = isMe ? 'me' : 'other';
+		const name = isMe ? 'Me' : data.user;
+
+        chat.innerHTML += '<div class="block w-full max-w-md md:max-w-2xl float-left rounded-md my-2 bg-gray-400'
+                        + ' p-4 pb-0 pt-2 text-lg text-gray-800 font-semibold">'
+                        + '<strong>' + name + '</strong><br>'
                         + data.message
+                        + '<br><span class="text-gray-50 text-sm float-right">' + datetime + '</span><br>'
                         + '</div>';
         chat.scrollTop = chat.scrollHeight;
     };
@@ -37,10 +46,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	input.focus();
     input.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            // cancel the default action, if needed
             event.preventDefault();
-
-            // trigger click event on button
             submitButton.onclick();
         }
     });
