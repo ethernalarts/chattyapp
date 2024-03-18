@@ -18,17 +18,17 @@
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full w-full md:max-w-2xl bg-white shadow p-8 rounded-sm">
-            <form class="space-y-6" action="#" method="POST">
+            <form class="space-y-6" action="" method="POST">
                 {% csrf_token %}
 
                 <!-- Username -->
                 <div class="mt-2">
-                    {% render_field form.username placeholder="username" class+='block w-full rounded-sm border-0 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                    {% render_field form.username placeholder="username" class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-gray-600 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
                 </div>
 
                 <!-- Password -->
                 <div class="mt-2">
-                    {% render_field form.password placeholder="password" class+='block w-full rounded-sm border-0 py-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-400 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                    {% render_field form.password placeholder="password" class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-gray-600 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
                 </div>
 
                 <div>
