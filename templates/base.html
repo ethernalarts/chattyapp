@@ -1,9 +1,9 @@
 {% load static tailwind_tags %}
 
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white">
+<html lang="en" dir="ltr">
 	<head>
-    	{% block title %} {% endblock %}
+    	{% block title %}{% endblock %}
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -13,14 +13,92 @@
 			.shadow {
 				box-shadow:
 					rgba(0, 0, 0, 0.3) 0px 19px 38px,
-					rgba(0, 0, 0, 0.22) 0px 15px 12px
+					rgba(0, 0, 0, 0.22) 0px 15px 12px,
+					rgba(0, 0, 0, 0.35) 0px 5px 15px
 				;
+			}
+
+			.shadow-min {
+				box-shadow:
+					rgba(0, 0, 0, 0.35) 0px 5px 15px;
 			}
 		</style>
 	</head>
 
-	<body class="bg-gray-100 font-sans items-center justify-center mx-auto min-h-screen
-				leading-normal tracking-normal">
+	<body class="bg-index bg-no-repeat bg-cover bg-center bg-fixed font-sans items-center justify-center mx-auto
+				 min-h-screen leading-normal tracking-normal z-10">
+
+		<!-- Success/Error messages -->
+		{% if messages %}
+			{% for message in messages %}
+				<!-- Success Messages -->
+				{% if message.tags == 'success' %}
+					<div
+						id="toast-success"
+						class="error-message flex justify-between items-center w-full p-4 rounded-sm drop-shadow-xl
+							   flex-row mt-6 -mb-2 space-x-8 mx-auto text-gray-700 bg-white max-w-md md:max-w-lg"
+						 role="alert"
+					>
+
+						<!-- checkmark with green background -->
+						<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-green-700 text-white">
+							<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+							<span class="sr-only">Check icon</span>
+						</div>
+
+						<!-- success message -->
+						<div class="text-lg text-center font-medium justify-self-center mx-auto">
+							{{ message }}
+						</div>
+
+						<!-- close (x) button -->
+						<button type="button"
+								class="close-error-message ml-auto -mx-1.5 -my-1.5 bg-white hover:bg-green-700 text-green-800
+										hover:text-white rounded-sm focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-green-800
+										inline-flex h-8 w-8"
+								data-dismiss-target="#toast-success" aria-label="Close">
+							<span class="sr-only">Close</span>
+							<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+						</button>
+					</div>
+				{% endif %}
+
+				<!-- Error Messages -->
+				{% if message.tags == 'error' %}
+					<div
+						id="toast-error"
+						class="error-message flex justify-between items-center w-full p-4 rounded-sm drop-shadow-xl
+							   flex-row my-6 -mb-2 space-x-8 mx-auto text-white bg-red-700 max-w-md md:max-w-lg"
+						role="alert"
+					>
+
+							<!-- X mark with white background -->
+							<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 bg-white text-red-700">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+									<path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
+								</svg>
+								<span class="sr-only">Check icon</span>
+							</div>
+
+							<!-- error message -->
+							<span class="text-lg text-center font-medium justify-self-center mx-auto">
+								{{ message }}
+							</span>
+
+							<!-- close (x) button -->
+							<button type="button"
+									class="close-error-message ml-auto -mx-1.5 -my-1.5 bg-red-700 hover:bg-white text-white
+											hover:text-red-600 rounded-sm focus:ring-2 focus:ring-gray-300 p-1.5
+											inline-flex h-8 w-8"
+									data-dismiss-target="#toast-success" aria-label="Close">
+								<span class="sr-only">Close</span>
+								<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+							</button>
+						</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
 		{% block content %}
 		{% endblock %}
 
@@ -29,5 +107,11 @@
 
 		{% block domready %}
 		{% endblock %}
+
+		<!-- JavaScript to close error message -->
+		<script src="{% static 'js/close-notif-message.js' %}"></script>
+
+		<!-- JavaScript to load spinner -->
+    	<script src="{% static 'js/loader.js' %}"></script>
 	</body>
 </html>

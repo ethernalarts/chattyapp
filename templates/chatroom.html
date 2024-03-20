@@ -6,13 +6,58 @@
 {% endblock %}
 
 {% block content %}
-    <div class="flex flex-col h-screen justify-between">
+    <div class="flex flex-col h-screen justify-between bg-gray-100">
+
         <!-- Header -->
-        <div class="z-50 mx-auto w-full">
-            <h2 class="py-4 text-center place-self-center text-3xl font-bold leading-9 tracking-tight text-white bg-blue-600">
-                Chat Room
-            </h2>
-        </div>
+        <nav class="z-50 mx-auto w-full bg-blue-600 p-4">
+
+            <!-- Navbar -->
+            <div class="flex flex-row w-full justify-between">
+                <h2 class="text-center place-self-center text-3xl font-bold leading-9 tracking-tight text-white">
+                    Chats
+                </h2>
+
+                <!-- User Icon, Username, Logout button -->
+                <div class="flex flex-row justify-between">
+
+                    <!-- User icon -->
+                    <div
+                        class="inline-flex items-center text-white space-x-4 bg-transparent rounded-sm
+                               cursor-pointer hover:bg-blue-400 p-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            class="w-8 h-8 mx-auto justify-center inline-flex">
+                            <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                        </svg>
+
+                        <!-- Name of Logged In User -->
+                        <span class="text-xl font-semibold">
+                            {{ request.user|title }}
+                        </span>
+                    </div>
+
+                    <!-- Logout Button -->
+                    <form method="POST" action="{% url 'logout' %}" class="ml-6 inline-flex">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="w-auto rounded-sm px-0 text-lg text-center leading-6 text-white
+                                   shadow-sm hover:bg-none focus-visible:outline focus-visible:outline-2
+                                   focus-visible:outline-offset-2 focus-visible:outline-red-500"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="w-9 h-9 mx-auto font-bold">
+                                <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
 
         <!-- chat container -->
         <div id="chat" class="z-10 overflow-y-auto flex flex-1 flex-col pt-6 pb-6 mx-0">

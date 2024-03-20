@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "daphne",
-    "apps.chat.apps.ChatConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -40,13 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "tailwind",
     "apps.theme.apps.ThemeConfig",
+    "apps.users.apps.UsersConfig",
+    "apps.chat.apps.ChatConfig",
     "django_browser_reload",
     "channels",
     "channels_postgres",
-]
-
-INSTALLED_APPS += [
-    'widget_tweaks',
+    "widget_tweaks",
 ]
 
 TAILWIND_APP_NAME = "apps.theme"
@@ -87,7 +85,7 @@ CHANNEL_LAYERS = {
 ROOT_URLCONF = "chattyapp.urls"
 
 LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "chat-room"
+LOGIN_REDIRECT_URL = "chat:chat-room"
 LOGOUT_REDIRECT_URL = "login"
 APPEND_SLASH = True
 
@@ -109,11 +107,12 @@ STATIC_URL = "/static/"
 
 # Template Directories
 ROOT = os.path.join(BASE_DIR, "templates")
+AUTHENTICATION = os.path.join(BASE_DIR, "templates/registration")
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [ROOT],
+        "DIRS": [ROOT, AUTHENTICATION],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

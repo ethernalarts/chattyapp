@@ -11,5 +11,12 @@ urlpatterns = [
     path('chat/', include('apps.chat.urls', namespace='chat')),
 
     # login
-    path("auth/login/", views.ChatLoginView.as_view(template_name="login.html"), name="login"),
+    path("login/", views.ChatLoginView.as_view(), name="login"),
+
+    # register
+    path("register/", views.CreateAccountView.as_view(), name="register"),
+
+    # logout
+    path("logout/", views.ChatLogoutView.as_view(), name="logout"),
+    # path("accounts/", include("django.contrib.auth.urls")),
 ]

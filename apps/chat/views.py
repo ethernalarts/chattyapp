@@ -1,6 +1,7 @@
 from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, FormView
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -38,20 +39,39 @@ class ChatLogoutView(LogoutView):
         return self.get_redirect_url() or self.get_default_redirect_url()
 
 
-class CreateAccountView(CreateView):
+class CreateAccountView(FormView):
     form_class = CreateAccountForm
     success_url = reverse_lazy("login")
     template_name = 'register.html'
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
+    def form_invalid(self, form):
+        password1 = form.cleaned_data.get('password1')
+        password2 = form.cleaned_data.get('password2')
 
+        if password1 != password2:
+            messages.error(self.request, "Your passwords do not match")
+        # for error in form.non_field_errors():
+        #     messages.error(self.request, f"{error}")
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def form_valid(self, form):
+        username = form.cleaned_data.get('username')
+        messages.success(self.request, f"Account has been created for {username}")
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def register_user(request):
+    if request.method == 'POST':
+        form = CreateAccountForm(request.POST)
         if form.is_valid():
+            form.save()  # Save user to Database
             username = form.cleaned_data.get('username')
-            messages.success(self.request, f"Account has been created for {username}")
-            return self.form_valid(form)
+            messages.success(request, f'Account has been created for {username}!')
+            return redirect('login')
         else:
-            for error in form.errors:
-                messages.error(self.request, f'{error}')
-            return self.form_invalid(form)
-            # return render(request, "register.html", {'form': form})
+            for error in form.errors():
+                messages.error(request, f'{error}')
+            form = CreateAccountForm()
+    else:
+        form = CreateAccountForm()
+    return render(request, 'registration/register.html', {'form': form})
