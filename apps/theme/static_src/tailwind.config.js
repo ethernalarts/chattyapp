@@ -10,7 +10,7 @@ module.exports = {
     theme: {
 		extend:{
 			backgroundImage: {
-				'index': "url('/static/img/milad.jpg')",
+				'index': "url('/static/img/sprat.jpg')",
 				// 'templates': "url(../img/spencer.jpg)",
 			},
 		},

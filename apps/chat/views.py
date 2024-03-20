@@ -44,20 +44,22 @@ class CreateAccountView(FormView):
     success_url = reverse_lazy("login")
     template_name = 'register.html'
 
-    def form_invalid(self, form):
-        password1 = form.cleaned_data.get('password1')
-        password2 = form.cleaned_data.get('password2')
-
-        if password1 != password2:
-            messages.error(self.request, "Your passwords do not match")
-        # for error in form.non_field_errors():
-        #     messages.error(self.request, f"{error}")
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def form_valid(self, form):
-        username = form.cleaned_data.get('username')
-        messages.success(self.request, f"Account has been created for {username}")
-        return HttpResponseRedirect(self.get_success_url())
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(self.request, f"Account has been created for {str(username)}")
+            return self.form_valid(form)
+        else:
+            password1 = form.cleaned_data.get('password1')
+            password2 = form.cleaned_data.get('password2')
+            if password1 != password2:
+                messages.error(self.request, "Your passwords do not match")
+                return self.form_invalid(form)
+            for error in form.non_field_errors():
+                messages.error(self.request, f"{error}")
+            return self.form_invalid(form)
 
 
 def register_user(request):
