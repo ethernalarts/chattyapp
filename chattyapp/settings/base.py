@@ -57,6 +57,9 @@ NPM_BIN_PATH = r"C:/Program Files/nodejs/npm.cmd"
 
 TAILWIND_CSS_PATH = "css/dist/styles.css"
 
+# Email Authentication Backend
+AUTHENTICATION_BACKENDS = ["apps.users.backends.EmailBackend"]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -101,7 +104,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 CHAT_STATIC = os.path.join(BASE_DIR, "apps/chat/static/chat/")
 THEME_STATIC = os.path.join(BASE_DIR, "apps/theme/static/theme/")
-STATICFILES_DIRS = [CHAT_STATIC]
+STATICFILES_DIRS = [CHAT_STATIC, THEME_STATIC]
 
 STATIC_URL = "/static/"
 
