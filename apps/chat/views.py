@@ -1,18 +1,17 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import login
 
-# from django.contrib.auth import login
 from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, CreateView, FormView
+from django.views.generic import TemplateView, FormView, UpdateView
 
 from django.contrib.auth.models import User
-from django.core.validators import validate_email
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponseRedirect
-from django.core.exceptions import ObjectDoesNotExist
-from apps.users.forms import CreateAccountForm
+from apps.users.models import Profile
+from apps.users.forms import CreateAccountForm, UserUpdateForm, ProfileUpdateForm
 
 
 @login_required
@@ -55,7 +54,7 @@ class ChatLogoutView(LogoutView):
 class CreateAccountView(FormView):
     form_class = CreateAccountForm
     success_url = reverse_lazy("login")
-    template_name = "profile.html"
+    template_name = "register.html"
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -68,9 +67,7 @@ class CreateAccountView(FormView):
 
     def form_valid(self, form):
         username = form.cleaned_data.get("username")
-        messages.success(
-            self.request, f"Account has been created for {str(username)}"
-        )
+        messages.success(self.request, f"Account has been created for {str(username)}")
         return HttpResponseRedirect(self.get_success_url())
 
     def password_check(self, form):
@@ -87,18 +84,86 @@ class CreateAccountView(FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-def register_user(request):
-    if request.method == "POST":
-        form = CreateAccountForm(request.POST)
-        if form.is_valid():
-            form.save()  # Save user to Database
-            username = form.cleaned_data.get("username")
-            messages.success(request, f"Account has been created for {username}!")
-            return redirect("login")
+class ProfileView(LoginRequiredMixin, UpdateView):
+    redirect_authenticated_user = True
+    form_class = UserUpdateForm
+    second_form_class = ProfileUpdateForm
+    template_name = "profile.html"
+    redirect_field_name = "next"
+    success_url = "chatroom.html"
+    model = User
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.object = None
+
+    def get_success_url(self):
+        return self.get_redirect_url() or self.get_default_redirect_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_client"] = True
+        if "userform" not in context:
+            context["userform"] = self.form_class(self.request.GET)
+        if "profileform" not in context:
+            context["profileform"] = self.second_form_class(self.request.GET)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+        userform = self.form_class
+        profileform = self.second_form_class
+        return self.render_to_response(
+            self.get_context_data(
+                object=self.object, userform=userform, profileform=profileform
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        userform = self.form_class(request.POST)
+        profileform = self.second_form_class(request.POST)
+
+        if userform.is_valid() and profileform.is_valid():
+            userdata = userform.save(commit=False)
+            userdata.save()
+            profiledata = profileform.save(commit=False)
+            profiledata.user = userdata
+            profiledata.save()
+            messages.success(self.request, "Profile Updated")
+            return HttpResponseRedirect(self.get_success_url())
         else:
-            for error in form.errors():
-                messages.error(request, f"{error}")
-            form = CreateAccountForm()
+            return self.render_to_response(
+                self.get_context_data(userform=userform, profileform=profileform)
+            )
+
+    # def form_invalid(self, form):
+    #     userform = self.form_class
+    #     profileform = self.second_form_class
+    #
+    #     if userform.non_field_errors(self):
+    #         for error in userform.non_field_errors(self):
+    #             messages.error(self.request, f"{error}")
+    #     if profileform.non_field_errors(self):
+    #         for error in userform.non_field_errors():
+    #             messages.error(self.request, f"{error}")
+    #     return self.render_to_response(
+    #         self.get_context_data(userform=userform, profileform=profileform)
+
+
+@login_required
+def profile(request):
+    if request.method == "POST":
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"Your profile has been updated")
+            return redirect("chat-profile")  # Redirect back to profile page
+
     else:
-        form = CreateAccountForm()
-    return render(request, "registration/register.html", {"form": form})
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {"u_form": u_form, "p_form": p_form}
+
+    return render(request, "users/profile.html", context)

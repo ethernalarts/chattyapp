@@ -4,25 +4,44 @@
 
 {% block title %}
     <title>
-        Update Profile
+        Profile
     </title>
 {% endblock %}
 
 {% block content %}
     <div class="flex min-h-full w-full flex-col px-6 py-8 lg:px-0 mx-auto">
-        <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img class="mx-auto w-24 h-24 w-auto" src="{% static 'img/logo2.svg' %}" alt="chatty-logo">
+        <!-- App Logo -->
+        <div class="w-64 mt-4 mx-auto ">
+            <img class="w-full h-full" src="{% static 'img/logo2.svg' %}" alt="chatty-logo">
+        </div>
+
+        <div class="mt-12 sm:mx-auto sm:w-full sm:max-w-sm">
+            <!-- Profile Picture -->
+            <div class="mt-2">
+                <img class="mx-auto w-32 h-32 rounded-full shadow-sm text-center" src="{{ user.profile.image.url }}" />
+            </div>
             <h2 class="mt-6 text-center text-3xl font-bold leading-9 tracking-tight text-gray-800">
-                Update Your Profile
+                Profile
             </h2>
         </div>
 
-        <div class="mt-10 sm:mx-auto sm:w-full w-full md:max-w-3xl bg-white shadow pt-2 p-8 rounded-sm">
+        <div class="mt-10 sm:mx-auto sm:w-full w-full md:max-w-3xl bg-white shadow pt-4 pb-4 p-8 rounded-sm">
             <form class="space-y-6" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <!-- Form Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block text-lg font-bold leading-6 text-gray-600">
+                            Name
+                        </label>
+
+                        <div id="name" class="mt-2">
+                            {% render_field profileform.name class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                        </div>
+                    </div>
+
                     <!-- Username -->
                     <div>
                         <label for="username" class="block text-lg font-bold leading-6 text-gray-600">
@@ -45,31 +64,22 @@
                         </div>
                     </div>
 
-                    <!-- Password -->
-                    <div>
-                        <label for="password1" class="block text-lg font-bold leading-6 text-gray-600">
-                            Password
+                    <!-- Image -->
+                    <div class="">
+                        <label for="image" class="block text-lg font-bold leading-6 text-gray-600">
+                            Upload Image
                         </label>
 
-                        <div id="password1" class="mt-2">
-                            {% render_field form.password1 class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
-                        </div>
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div>
-                        <label for="password2" class="block text-lg font-bold leading-6 text-gray-600">
-                            Confirm Password
-                        </label>
-
-                        <div id="password2" class="mt-2">
-                            {% render_field form.password2 class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                        <div id="image" class="mt-2">
+                            {% render_field profileform.image class+='cursor-pointer block w-full rounded-sm border-0 px-3 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div>
+
+                <!-- Update Button and Cancel Button -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-4 pb-6">
+                    <!-- Update -->
                     <button
                         id="submit-button"
                         type="submit"
@@ -77,7 +87,7 @@
                                leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline
                                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                        <span id="sign-in" class="block">Create Account</span>
+                        <span id="sign-in" class="block">Save</span>
 
                         <!-- Spinner loader -->
                         <div id="spinner" role="status" class="hidden">
@@ -94,16 +104,20 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </button>
+
+                    <!-- Cancel -->
+                    <a href="{% url 'chat:chat-room' %}">
+                        <button
+                            type="submit"
+                            class="flex w-full justify-center rounded-sm bg-red-600 px-3 py-4 text-xl font-semibold
+                                   leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline
+                                   focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        >
+                            <span class="block">Cancel</span>
+                        </button>
+                    </a>
                 </div>
             </form>
-
-            <p class="mt-6 text-center text-md text-gray-600 font-semibold space-x-4">
-                Already have an account?
-                <a href="{% url 'login' %}"
-                   class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                    Log In
-                </a>
-            </p>
         </div>
     </div>
 {% endblock %}

@@ -12,17 +12,28 @@
     <div class="flex min-h-full w-full flex-col px-6 py-8 lg:px-0 mx-auto">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img class="mx-auto w-24 h-24 w-auto" src="{% static 'img/logo2.svg' %}" alt="chatty-logo">
-            <h2 class="mt-6 text-center text-3xl font-bold leading-9 tracking-tight text-gray-800">
+            <h2 class="mt-12 text-center text-3xl font-bold leading-9 tracking-tight text-gray-800">
                 Register to start chatting
             </h2>
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full w-full md:max-w-3xl bg-white shadow pt-2 p-8 rounded-sm">
-            <form class="space-y-6" method="POST">
+            <form class="space-y-6" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <!-- Form Fields -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="username" class="block text-lg font-bold leading-6 text-gray-600">
+                            Name
+                        </label>
+
+                        <div id="name" class="mt-2">
+                            {% render_field form.name class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                        </div>
+                    </div>
+
                     <!-- Username -->
                     <div>
                         <label for="username" class="block text-lg font-bold leading-6 text-gray-600">
@@ -42,6 +53,17 @@
 
                         <div id="email" class="mt-2">
                             {% render_field form.email class+='block w-full rounded-sm border-0 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
+                        </div>
+                    </div>
+
+                    <!-- Image -->
+                    <div class="">
+                        <label for="image" class="block text-lg font-bold leading-6 text-gray-600">
+                            Upload Image
+                        </label>
+
+                        <div id="image" class="mt-2">
+                            {% render_field profileform.image class+='cursor-pointer block w-full rounded-sm border-0 px-3 py-3.5 shadow-sm ring-1 ring-inset ring-gray-400 text-lg md:text-lg font-bold text-indigo-700 placeholder:text-gray-400 placeholder:text-lg placeholder:font-semibold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6' %}
                         </div>
                     </div>
 
