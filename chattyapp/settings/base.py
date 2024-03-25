@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "channels",
     "channels_postgres",
     "widget_tweaks",
+    "phonenumber_field",
 ]
 
 TAILWIND_APP_NAME = "apps.theme"
@@ -133,6 +134,11 @@ ASGI_APPLICATION = "chattyapp.asgi.application"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+# Phone Number
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_REGION = 'NG'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

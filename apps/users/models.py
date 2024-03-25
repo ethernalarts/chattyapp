@@ -1,19 +1,34 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
+    GENDER = [("Male", "Male"), ("Female", "Female")]
+
     def get_upload_path(self, filename):
         return "images/{0}/{1}".format(self.user.username, filename)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50, blank=True)
-    image = models.ImageField(default='default.png', upload_to=get_upload_path)
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    phone_number = PhoneNumberField(blank=True)
+    about = models.CharField(max_length=1000, blank=True)
+    gender = models.CharField(
+        "Gender", choices=GENDER, max_length=100, blank=False, default="Male"
+    )
+    image = models.ImageField(
+        default="default.png",
+        upload_to=get_upload_path,
+        validators=[FileExtensionValidator(["png", "jpg"])],
+    )
 
     def __str__(self):
-        return f'{self.user.username} Profile'  # show how we want it to be displayed
+        return f"{self.user.username} Profile"
 
         # Override the save method of the model
+
     # def save(self):
     #     super().save()
     #

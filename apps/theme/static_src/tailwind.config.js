@@ -2,8 +2,8 @@
 
 module.exports = {
     content: [
-        "../../.././templates/**/*.html",
-        "../../.././apps/chat/static/chat/**/*.js",
+        "../../../templates/**/*.html",
+        "../../chat/static/chat/**/*.js",
     ],
     presets: [],
     darkMode: 'media', // or 'class'
@@ -15,10 +15,10 @@ module.exports = {
 			},
 		},
 		screens: {
-			xs: '449px', // 380px
-			sm: '709px', // 640px
-			md: '837px', // 768px
-			lg: '1093px', //1024px
+			xs: '380px', // 380px
+			sm: '640px', // 640px
+			md: '768px', // 768px
+			lg: '1024px', //1024px
 			xl: '1280px', //1280px
 			'2xl': '1536px', //1536px
 		},
