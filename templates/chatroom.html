@@ -9,7 +9,7 @@
     <div class="flex flex-col h-screen justify-between bg-gray-100">
 
         <!-- Header -->
-        <nav class="z-50 mx-auto w-full bg-blue-600 px-4 py-3">
+        <nav class="z-50 mx-auto w-full bg-blue-600 px-4 py-2">
 
             <!-- Navbar -->
             <div class="flex flex-row w-full justify-items-stretch">
@@ -28,15 +28,13 @@
                     <!-- User icon -->
                     <div class="flex text-white space-x-4 bg-transparent rounded-sm cursor-pointer
                                 justify-center md:flex-row hover:bg-blue-400 p-3">
-                        <a href="{% url 'chat:chat-userprofile' request.user.id %}"
+                        <a href="{% url 'chat:chat-userprofile' user.id %}"
                            class="flex flex-row justify-between items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="w-8 h-8 mx-auto flex">
-                                <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
-                            </svg>
+
+                            <!-- Thumbnail of Profile Picture -->
+                            <div class="w-16 h-16">
+                                <img class="w-full h-full rounded-full" src="{{ user.profile.image.url }}" />
+                            </div>
 
                             <!-- Name of Logged In User -->
                             <span class="flex ml-4 text-xl font-semibold">

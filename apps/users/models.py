@@ -6,6 +6,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
+    # primary key
+    id = models.BigAutoField(primary_key=True, editable=False)
+
     GENDER = [("Male", "Male"), ("Female", "Female")]
 
     def get_upload_path(self, filename):
@@ -14,10 +17,10 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
-    phone_number = PhoneNumberField(blank=True)
-    about = models.CharField(max_length=1000, blank=True)
+    phone_number = PhoneNumberField(blank=False)
+    about = models.CharField(max_length=200, blank=True)
     gender = models.CharField(
-        "Gender", choices=GENDER, max_length=100, blank=False, default="Male"
+        "Gender", choices=GENDER, max_length=10, blank=False, default="Male"
     )
     image = models.ImageField(
         default="default.png",
@@ -26,7 +29,7 @@ class Profile(models.Model):
     )
 
     def get_absolute_url(self):
-        return reverse('userdetails', kwargs={'pk': self.user.id})
+        return reverse('chat:chat-userprofile', kwargs={'pk': self.user.id})
 
     def __str__(self):
         return f"{self.user.username} Profile"

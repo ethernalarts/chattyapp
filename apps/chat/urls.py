@@ -8,6 +8,7 @@ app_name = "chat"
 urlpatterns = [
     path('room/', views.ChatRoom.as_view(), name="chat-room"),
     path('profile/<int:pk>/', views.ProfileView.as_view(), name="chat-userprofile"),
+    path('profile/<int:pk>/edit/', views.EditProfileView.as_view(), name="chat-editprofile"),
 ]
 
 if settings.DEBUG:

@@ -5,7 +5,7 @@ from django.contrib.auth import login
 
 from django.urls import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic import TemplateView, FormView, UpdateView
+from django.views.generic import TemplateView, FormView, UpdateView, DetailView
 
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -84,14 +84,33 @@ class CreateAccountView(FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class ProfileView(LoginRequiredMixin, UpdateView):
-    redirect_authenticated_user = True
+class ProfileView(DetailView):
+    model = User
     form_class = UserUpdateForm
     second_form_class = ProfileUpdateForm
     template_name = "profile.html"
-    redirect_field_name = "next"
-    success_url = "chatroom.html"
+    context_object_name = "obj"
+
+    def get_object(self, queryset=None):
+        try:
+            return User.objects.get(id=self.kwargs["pk"])
+        except ObjectDoesNotExist:
+            raise ObjectDoesNotExist("The request Object does not exist")
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileView, self).get_context_data(**kwargs)
+        context["userform"] = self.form_class(self.request.GET)
+        context["profileform"] = self.second_form_class(instance=self.object)
+        return context
+
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
     model = User
+    redirect_authenticated_user = True
+    form_class = UserUpdateForm
+    second_form_class = ProfileUpdateForm
+    template_name = "editprofile.html"
+    redirect_field_name = "next"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -103,40 +122,33 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         except ObjectDoesNotExist:
             raise ObjectDoesNotExist("The request Object does not exist")
 
+    def get_success_url(self):
+        return self.get_object().profile.get_absolute_url()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_client"] = True
-        user = self.get_object()
         if "userform" not in context:
             context["userform"] = self.form_class(self.request.GET)
         if "profileform" not in context:
-            context["profileform"] = user.profile
+            context["profileform"] = self.second_form_class(instance=self.object.profile)
         return context
-
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-        userform = self.form_class
-        profileform = self.second_form_class(instance=self.object)
-        return self.render_to_response(
-            self.get_context_data(
-                object=self.object, userform=userform, profileform=profileform
-            )
-        )
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        userform = self.form_class(request.POST)
-        profileform = self.second_form_class(request.POST)
+        userform = self.get_form(self.form_class)
+        profileform = self.get_form(self.second_form_class)
 
         if userform.is_valid() and profileform.is_valid():
             userdata = userform.save(commit=False)
             userdata.save()
             profiledata = profileform.save(commit=False)
             profiledata.user = userdata
-            profiledata.save()
-            messages.success(self.request, "Profile Updated")
+            userdata.save()
+            messages.success(self.request, "Your profile has been updated")
             return HttpResponseRedirect(self.get_success_url())
         else:
+            messages.error(self.request, "An error has occurred. Please check your entries.")
             return self.render_to_response(
                 self.get_context_data(userform=userform, profileform=profileform)
             )

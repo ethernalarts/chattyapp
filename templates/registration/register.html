@@ -9,6 +9,8 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'snippets/messages.html' %}
+
     <div class="flex min-h-full w-full flex-col px-6 py-8 lg:px-0 mx-auto">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img class="mx-auto w-24 h-24 w-auto" src="{% static 'img/logo2.svg' %}" alt="chatty-logo">
