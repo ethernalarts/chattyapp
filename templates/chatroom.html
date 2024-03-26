@@ -12,33 +12,38 @@
         <nav class="z-50 mx-auto w-full bg-blue-600 px-4 py-3">
 
             <!-- Navbar -->
-            <div class="flex flex-row w-full justify-between">
+            <div class="flex flex-row w-full justify-items-stretch">
                 <h2 class="text-center place-self-center text-3xl font-bold leading-9 tracking-tight text-white">
                     Chats
                 </h2>
+
+                <!-- App Logo -->
+                <figure class="flex mx-auto sm:w-full">
+                    <img class="mx-auto w-20 h-20" src="{% static 'img/logo2.svg' %}" alt="speek-logo" />
+                </figure>
 
                 <!-- User Icon, Username, Logout button -->
                 <div class="flex flex-row justify-between">
 
                     <!-- User icon -->
-                    <a href="{% url 'chat:chat-userprofile' request.user.id %}">
-                        <div
-                            class="inline-flex items-center text-white space-x-4 bg-transparent rounded-sm
-                                   cursor-pointer hover:bg-blue-400 p-3">
+                    <div class="flex text-white space-x-4 bg-transparent rounded-sm cursor-pointer
+                                justify-center md:flex-row hover:bg-blue-400 p-3">
+                        <a href="{% url 'chat:chat-userprofile' request.user.id %}"
+                           class="flex flex-row justify-between items-center">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                class="w-8 h-8 mx-auto justify-center inline-flex">
+                                class="w-8 h-8 mx-auto flex">
                                 <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                             </svg>
 
                             <!-- Name of Logged In User -->
-                            <span class="text-xl font-semibold">
+                            <span class="flex ml-4 text-xl font-semibold">
                                 {{ request.user }}
                             </span>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
 
                     <!-- Logout Button -->
                     <form method="POST" action="{% url 'logout' %}" class="ml-6 inline-flex">
@@ -52,7 +57,7 @@
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
-                                class="w-9 h-9 mx-auto font-bold">
+                                class="w-10 h-10 mx-auto font-extrabold text-red-400">
                                 <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
                             </svg>
                         </button>

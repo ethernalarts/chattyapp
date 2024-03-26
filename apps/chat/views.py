@@ -1,17 +1,17 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import login
 
 from django.urls import reverse, reverse_lazy
+from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic import TemplateView, FormView, UpdateView
 
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponseRedirect
-from apps.users.models import Profile
-from apps.users.forms import CreateAccountForm, UserUpdateForm, ProfileUpdateForm
+from apps.users.forms import *
 
 
 @login_required
@@ -97,19 +97,26 @@ class ProfileView(LoginRequiredMixin, UpdateView):
         super().__init__(**kwargs)
         self.object = None
 
+    def get_object(self, queryset=None):
+        try:
+            return User.objects.get(id=self.kwargs["pk"])
+        except ObjectDoesNotExist:
+            raise ObjectDoesNotExist("The request Object does not exist")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_client"] = True
+        user = self.get_object()
         if "userform" not in context:
             context["userform"] = self.form_class(self.request.GET)
         if "profileform" not in context:
-            context["profileform"] = self.second_form_class(self.request.GET)
+            context["profileform"] = user.profile
         return context
 
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
         userform = self.form_class
-        profileform = self.second_form_class
+        profileform = self.second_form_class(instance=self.object)
         return self.render_to_response(
             self.get_context_data(
                 object=self.object, userform=userform, profileform=profileform
@@ -133,34 +140,3 @@ class ProfileView(LoginRequiredMixin, UpdateView):
             return self.render_to_response(
                 self.get_context_data(userform=userform, profileform=profileform)
             )
-
-    # def form_invalid(self, form):
-    #     userform = self.form_class
-    #     profileform = self.second_form_class
-    #
-    #     if userform.non_field_errors(self):
-    #         for error in userform.non_field_errors(self):
-    #             messages.error(self.request, f"{error}")
-    #     if profileform.non_field_errors(self):
-    #         for error in userform.non_field_errors():
-    #             messages.error(self.request, f"{error}")
-    #     return self.render_to_response(
-    #         self.get_context_data(userform=userform, profileform=profileform)
-
-
-@login_required
-def profile(request):
-    if request.method == "POST":
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, f"Your profile has been updated")
-            return redirect("chat-profile")  # Redirect back to profile page
-
-    else:
-        u_form = UserUpdateForm(instance=request.user)
-        p_form = ProfileUpdateForm(instance=request.user.profile)
-
-    context = {"u_form": u_form, "p_form": p_form}
-
-    return render(request, "users/profile.html", context)
