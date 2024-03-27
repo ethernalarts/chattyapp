@@ -131,24 +131,35 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         if "userform" not in context:
             context["userform"] = self.form_class(self.request.GET)
         if "profileform" not in context:
-            context["profileform"] = self.second_form_class(instance=self.object.profile)
+            context["profileform"] = self.second_form_class(
+                instance=self.object.profile
+            )
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         userform = self.get_form(self.form_class)
-        profileform = self.get_form(self.second_form_class)
+        profile_instance = get_object_or_404(Profile, user=self.request.user)
+        profileform = ProfileUpdateForm(
+            request.POST or None, request.FILES or None, instance=profile_instance
+        )
 
         if userform.is_valid() and profileform.is_valid():
             userdata = userform.save(commit=False)
             userdata.save()
             profiledata = profileform.save(commit=False)
-            profiledata.user = userdata
-            userdata.save()
+            profiledata.save()
             messages.success(self.request, "Your profile has been updated")
-            return HttpResponseRedirect(self.get_success_url())
+            return self.form_valid(profileform)
         else:
-            messages.error(self.request, "An error has occurred. Please check your entries.")
+            return self.form_invalid(profileform)
+
+    def form_invalid(self, profileform):
+        for error in profileform.non_field_errors():
+            messages.error(self.request, f"{error}")
             return self.render_to_response(
-                self.get_context_data(userform=userform, profileform=profileform)
+                self.get_context_data(
+                    userform=self.form_class(self.request.GET),
+                    profileform=self.second_form_class(instance=self.object.profile),
+                )
             )
