@@ -5,9 +5,14 @@ from django.contrib.auth import login
 
 from django.urls import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
-from django.views.generic import TemplateView, FormView, UpdateView, DetailView
+from django.views.generic import (
+    TemplateView,
+    UpdateView,
+    DetailView,
+    CreateView,
+    FormView,
+)
 
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponseRedirect
@@ -32,10 +37,15 @@ class ChatLoginView(LoginView):
     model = User
 
     def form_valid(self, form):
-        user = form.get_user()
-        if user:
+        try:
+            user = form.get_user()
             login(self.request, user)
+            username = User.objects.get(id=self.request.user.id).username
+            messages.success(self.request, f"Welcome, {str(username)}")
             return HttpResponseRedirect(self.get_success_url())
+        except ObjectDoesNotExist:
+            messages.error(self.request, "This user does not exist")
+            return self.form_invalid(form)
 
     def form_invalid(self, form):
         for error in form.non_field_errors():
@@ -51,43 +61,68 @@ class ChatLogoutView(LogoutView):
         return self.get_redirect_url() or self.get_default_redirect_url()
 
 
-class CreateAccountView(FormView):
+class CreateAccountView(CreateView):
     form_class = CreateAccountForm
+    second_form_class = ProfileForm
     success_url = reverse_lazy("login")
     template_name = "register.html"
+    model = User
 
-    def post(self, request, *args, **kwargs):
-        form = self.get_form()
-        self.password_check(form)
-        if form.is_valid():
-            form.save()
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+    def get_context_data(self, **kwargs):
+        context = super(CreateAccountView, self).get_context_data(**kwargs)
+        context["form"] = self.form_class(self.request.GET)
+        context["profileform"] = self.second_form_class(self.request.GET)
+        return context
 
     def form_valid(self, form):
+        password1 = form.cleaned_data.get("password1")
+        password2 = form.cleaned_data.get("password2")
         username = form.cleaned_data.get("username")
-        messages.success(self.request, f"Account has been created for {str(username)}")
-        return HttpResponseRedirect(self.get_success_url())
 
-    def password_check(self, form):
-        password1 = self.request.POST.get("password1")
-        password2 = self.request.POST.get("password2")
+        self.password_check(password1, password2)
 
+        user = form.save()
+        profile_form = self.second_form_class(
+            self.request.POST,
+            self.request.FILES,
+            instance=user.profile
+        )
+
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(
+                self.request,
+                f"Welcome, {str(username)}. Your account has been created, please log in to start chatting",
+            )
+            return HttpResponseRedirect(self.success_url)
+        else:
+            return self.form_invalid(profile_form)
+
+    def password_check(self, password1, password2):
         if password1 != password2:
             messages.error(self.request, "Your passwords do not match")
-            return self.render_to_response(self.get_context_data(form=form))
+            return self.render_to_response(
+                self.get_context_data(
+                    userform=self.form_class(self.request.POST),
+                    profileform=self.second_form_class(self.request.POST),
+                )
+            )
 
     def form_invalid(self, form):
-        for error in form.non_field_errors():
+        for error in form.errors:
             messages.error(self.request, f"{error}")
-        return self.render_to_response(self.get_context_data(form=form))
+        return self.render_to_response(
+            self.get_context_data(
+                userform=self.form_class(self.request.GET),
+                profileform=self.second_form_class(self.request.GET),
+            )
+        )
 
 
 class ProfileView(DetailView):
     model = User
     form_class = UserUpdateForm
-    second_form_class = ProfileUpdateForm
+    second_form_class = ProfileForm
     template_name = "profile.html"
     context_object_name = "obj"
 
@@ -108,7 +143,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     model = User
     redirect_authenticated_user = True
     form_class = UserUpdateForm
-    second_form_class = ProfileUpdateForm
+    second_form_class = ProfileForm
     template_name = "editprofile.html"
     redirect_field_name = "next"
 
@@ -138,11 +173,13 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        userform = self.get_form(self.form_class)
-        profile_instance = get_object_or_404(Profile, user=self.request.user)
-        profileform = ProfileUpdateForm(
-            request.POST or None, request.FILES or None, instance=profile_instance
+        userform = self.form_class(self.request.POST, instance=self.request.user)
+        profileform = self.second_form_class(
+            request.POST or None,
+            request.FILES or None,
+            instance=self.request.user.profile,
         )
+        # profile_instance = get_object_or_404(Profile, user=self.request.user)
 
         if userform.is_valid() and profileform.is_valid():
             userdata = userform.save(commit=False)

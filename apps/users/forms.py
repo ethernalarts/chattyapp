@@ -7,6 +7,8 @@ from .models import Profile
 
 class CreateAccountForm(UserCreationForm):
     email = forms.EmailField()
+    first_name = forms.CharField(max_length=50, required=True)
+    last_name = forms.CharField(max_length=50, required=True)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -20,7 +22,14 @@ class CreateAccountForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = [
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+            "password1",
+            "password2",
+        ]
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -28,16 +37,15 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ["first_name", "last_name", "username", "email"]
 
 
-# Create a ProfileUpdateForm to update image.
-class ProfileUpdateForm(forms.ModelForm):
-    phone_number = PhoneNumberField(region="NG")
+class ProfileForm(forms.ModelForm):
+    phone_number = PhoneNumberField(region="NG", required=False)
+    about = forms.CharField(
+        max_length=300, required=False, widget=forms.Textarea(attrs={"rows": 6})
+    )
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'gender', 'phone_number', 'about', 'image']
-        widgets = {
-            'about': forms.Textarea(attrs={'rows': 6}),
-        }
+        fields = ["gender", "phone_number", "about", "image"]

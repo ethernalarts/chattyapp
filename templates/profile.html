@@ -29,7 +29,11 @@
             </h2>
 
             <h2 class="mt-8 text-center text-4xl font-extrabold leading-9 tracking-tight text-gray-800">
-                {{ user.profile.first_name }} {{ user.profile.last_name }}
+                {% if user.first_name and user.last_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        John Doe
+                {% endif %}
             </h2>
 
             <!-- Fields -->
@@ -84,14 +88,22 @@
                     <label for="about" class="block text-lg font-bold leading-6 text-gray-500">
                         About
                     </label>
-                    <div id="about" class="mt-2 block w-full text-xl text-justify font-semibold text-gray-800">
-                        <span>{{ user.profile.about }}</span>
+                    <div
+                        id="about"
+                        class="mt-2 block w-full text-xl text-justify font-semibold text-gray-800 border border-1 p-4
+                               h-48 border-gray-300 rounded-sm"
+                    >
+                        {% if user.profile.about %}
+                            {{ user.profile.about }}
+                            {% else %}
+                                Nothing to say here
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
             <!-- Edit Profile and Bact to Chat room Button -->
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
 
                 <!-- Edit Profile -->
                 <a href="{% url 'chat:chat-editprofile' user.id %}">
