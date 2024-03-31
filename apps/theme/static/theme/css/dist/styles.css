@@ -922,6 +922,10 @@ select {
   margin-top: 2rem;
 }
 
+.mt-14 {
+  margin-top: 3.5rem;
+}
+
 .block {
   display: block;
 }
@@ -1145,6 +1149,10 @@ select {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.text-wrap {
+  text-wrap: wrap;
 }
 
 .break-all {

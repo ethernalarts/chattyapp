@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on 127.0.0.1:8000
+From: webmaster@localhost
+To: subzero@mortalkombat.com
+Date: Sun, 31 Mar 2024 02:25:35 -0000
+Message-ID: <171185193590.936.14912442864995251836@NEUTRON-PC>
+
+
+You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
+
+Please go to the following page and choose a new password:
+
+http://127.0.0.1:8000/accounts/reset/NDU/c4qhin-91939a964bb7f08ae96ec5bb22aa1974/
+
+Your username, in case you’ve forgotten: subzero
+
+Thanks for using our site!
+
+The 127.0.0.1:8000 team
+
+
+
+-------------------------------------------------------------------------------

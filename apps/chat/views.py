@@ -10,11 +10,11 @@ from django.views.generic import (
     UpdateView,
     DetailView,
     CreateView,
-    FormView,
 )
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
+from django.contrib.auth.forms import PasswordResetForm
 from django.http import HttpResponseRedirect
 from apps.users.forms import *
 
@@ -22,6 +22,7 @@ from apps.users.forms import *
 @login_required
 def index(request):
     return HttpResponseRedirect(reverse("chat:chat-room"))
+    # return render(request, 'password_reset_done.html')
 
 
 class ChatRoom(TemplateView):
@@ -68,19 +69,38 @@ class CreateAccountView(CreateView):
     template_name = "register.html"
     model = User
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.object = None
+
     def get_context_data(self, **kwargs):
         context = super(CreateAccountView, self).get_context_data(**kwargs)
-        context["form"] = self.form_class(self.request.GET)
+        context["userform"] = self.form_class(self.request.GET)
         context["profileform"] = self.second_form_class(self.request.GET)
         return context
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+
+        password1 = self.request.POST.get("password1")
+        password2 = self.request.POST.get("password2")
+
+        if password1 != password2:
+            messages.error(self.request, "Your passwords do not match")
+            return self.render_to_response(
+                self.get_context_data(
+                    userform=self.form_class(self.request.POST),
+                    profileform=self.second_form_class(self.request.POST),
+                )
+            )
+        else:
+            if form.is_valid():
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+
     def form_valid(self, form):
-        password1 = form.cleaned_data.get("password1")
-        password2 = form.cleaned_data.get("password2")
         username = form.cleaned_data.get("username")
-
-        self.password_check(password1, password2)
-
         user = form.save()
         profile_form = self.second_form_class(
             self.request.POST,
@@ -98,18 +118,8 @@ class CreateAccountView(CreateView):
         else:
             return self.form_invalid(profile_form)
 
-    def password_check(self, password1, password2):
-        if password1 != password2:
-            messages.error(self.request, "Your passwords do not match")
-            return self.render_to_response(
-                self.get_context_data(
-                    userform=self.form_class(self.request.POST),
-                    profileform=self.second_form_class(self.request.POST),
-                )
-            )
-
     def form_invalid(self, form):
-        for error in form.errors:
+        for error in form.non_field_errors():
             messages.error(self.request, f"{error}")
         return self.render_to_response(
             self.get_context_data(
@@ -200,3 +210,30 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
                     profileform=self.second_form_class(instance=self.object.profile),
                 )
             )
+
+
+class UserResetPasswordView(PasswordResetView):
+    form_class = PasswordResetForm
+    success_url = "password_reset_done.html"
+    template_name = "registration/password_reset_form.html"
+    fields = "__all__"
+    model = User
+
+    def form_valid(self, form):
+        opts = {
+            "use_https": self.request.is_secure(),
+            "token_generator": self.token_generator,
+            "from_email": self.from_email,
+            "email_template_name": self.email_template_name,
+            "subject_template_name": self.subject_template_name,
+            "request": self.request,
+            "html_email_template_name": self.html_email_template_name,
+            "extra_email_context": self.extra_email_context,
+        }
+        try:
+            User.objects.get(email=form.cleaned_data["to_email"]).email
+        except ObjectDoesNotExist:
+            messages.error(self.request, "No user found with the email address")
+            return super().form_invalid(form)
+        form.save(**opts)
+        return super().form_valid(form)

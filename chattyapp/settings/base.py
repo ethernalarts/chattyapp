@@ -93,6 +93,9 @@ LOGIN_REDIRECT_URL = "chat:chat-room"
 LOGOUT_REDIRECT_URL = "login"
 APPEND_SLASH = True
 
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
