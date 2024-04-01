@@ -88,9 +88,9 @@ CHANNEL_LAYERS = {
 
 ROOT_URLCONF = "chattyapp.urls"
 
-LOGIN_URL = "login"
+LOGIN_URL = "userlogin"
 LOGIN_REDIRECT_URL = "chat:chat-room"
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "userlogin"
 APPEND_SLASH = True
 
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
