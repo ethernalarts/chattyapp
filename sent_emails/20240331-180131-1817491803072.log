@@ -3,18 +3,19 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Subject: Password reset on 127.0.0.1:8000
 From: webmaster@localhost
-To: subzero@mortalkombat.com
-Date: Sun, 31 Mar 2024 02:25:35 -0000
-Message-ID: <171185193590.936.14912442864995251836@NEUTRON-PC>
+To: sonya@mortalkombat.com
+Date: Sun, 31 Mar 2024 17:01:31 -0000
+Message-ID: 
+ <171190449124.27848.17011432530520123135@NEUTRON-PC.www.huaweimobilewifi.com>
 
 
 You're receiving this email because you requested a password reset for your user account at 127.0.0.1:8000.
 
 Please go to the following page and choose a new password:
 
-http://127.0.0.1:8000/accounts/reset/NDU/c4qhin-91939a964bb7f08ae96ec5bb22aa1974/
+http://127.0.0.1:8000/accounts/reset/Mw/c4rm2j-d5b6a30d4e93cf84eb831072cd86849d/
 
-Your username, in case you’ve forgotten: subzero
+Your username, in case you’ve forgotten: sonya
 
 Thanks for using our site!
 

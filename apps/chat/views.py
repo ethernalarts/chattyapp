@@ -13,8 +13,9 @@ from django.views.generic import (
 )
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView, \
+    INTERNAL_RESET_SESSION_TOKEN
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.http import HttpResponseRedirect
 from apps.users.forms import *
 
@@ -22,7 +23,6 @@ from apps.users.forms import *
 @login_required
 def index(request):
     return HttpResponseRedirect(reverse("chat:chat-room"))
-    # return render(request, 'password_reset_done.html')
 
 
 class ChatRoom(TemplateView):
@@ -103,9 +103,7 @@ class CreateAccountView(CreateView):
         username = form.cleaned_data.get("username")
         user = form.save()
         profile_form = self.second_form_class(
-            self.request.POST,
-            self.request.FILES,
-            instance=user.profile
+            self.request.POST, self.request.FILES, instance=user.profile
         )
 
         if profile_form.is_valid():
@@ -212,28 +210,70 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
             )
 
 
-class UserResetPasswordView(PasswordResetView):
+class UserPasswordResetView(PasswordResetView):
     form_class = PasswordResetForm
-    success_url = "password_reset_done.html"
+    success_url = reverse_lazy("password_reset_done")
     template_name = "registration/password_reset_form.html"
     fields = "__all__"
     model = User
 
-    def form_valid(self, form):
-        opts = {
-            "use_https": self.request.is_secure(),
-            "token_generator": self.token_generator,
-            "from_email": self.from_email,
-            "email_template_name": self.email_template_name,
-            "subject_template_name": self.subject_template_name,
-            "request": self.request,
-            "html_email_template_name": self.html_email_template_name,
-            "extra_email_context": self.extra_email_context,
-        }
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
         try:
-            User.objects.get(email=form.cleaned_data["to_email"]).email
+            User.objects.get(email=self.request.POST["email"]).email
         except ObjectDoesNotExist:
-            messages.error(self.request, "No user found with the email address")
-            return super().form_invalid(form)
-        form.save(**opts)
-        return super().form_valid(form)
+            messages.error(
+                self.request,
+                "No user found with this email address. Please check and try again",
+            )
+            return self.form_invalid(form)
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+class UserPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = SetPasswordForm
+    template_name = "registration/password_reset_confirm.html",
+    success_url = reverse_lazy("password_reset_complete"),
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(self.request.POST)
+
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    # def form_valid(self, form):
+    #     user = form.save()
+    #     new_password = form.cleaned_data["new_password1"]
+    #     confirm_password = form.cleaned_data["new_password2"]
+    #
+    #     try:
+    #         new_password == confirm_password
+    #     except Exception:
+    #         messages.error(self.request, "Your passwords do not match")
+    #         return self.render_to_response(
+    #             self.get_context_data(
+    #                 form=form
+    #             )
+    #         )
+
+    # del self.request.session[INTERNAL_RESET_SESSION_TOKEN]
+    # if self.post_reset_login:
+    #     login(self.request, user, self.post_reset_login_backend)
+    # return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # error = form.errors
+        # a = list(error.as_data()["new_password2"][0])
+        # print(a[0])
+        # for e in form.errors.as_data():
+        # for error in form.error_messages:
+        error_messages = {
+            **self.get_form_class().error_messages,
+        }
+        messages.error(self.request, f"{self.get_form_class().error_messages}")
+        return self.render_to_response(self.get_context_data(form=form))
