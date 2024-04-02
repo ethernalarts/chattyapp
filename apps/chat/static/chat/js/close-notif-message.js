@@ -1,8 +1,9 @@
+
 // Get the error message popup
-var message = document.getElementsByClassName("error-message");
+const message = document.getElementsByClassName("error-message");
 
 // Get the X <button> element that closes the error message
-var closebutton = document.getElementsByClassName("close-error-message");
+const closebutton = document.getElementsByClassName("close-error-message");
 
 // Get the X <button> to close each error message
 for (let i = 0; i < message.length; i++) {

@@ -7,71 +7,133 @@
 
 {% block content %}
     <div class="flex flex-col h-screen justify-between bg-gray-100">
+        <nav class="bg-blue-600">
+            <div class="mx-auto w-full px-4 py-2">
+                <div class="relative flex h-16 items-center justify-between">
+                    <div class="flex flex-1 items-stretch justify-between justify-start">
+                        <div class="flex items-center">
+                            <!-- Chat Room -->
+                            <a
+                                href="{% url 'index' %}"
+                                class="bg-blue-900 text-white rounded-md px-4 py-3 text-xl font-medium"
+                            >
+                                Chat
+                            </a>
+                        </div>
 
-        <!-- Header -->
-        <nav class="z-50 mx-auto w-full bg-blue-600 px-4 py-2">
+                        <!-- App Logo -->
+                        <div class="flex mx-auto">
+                            <img class="h-32 w-32" src="{% static 'img/logo2.svg' %}" alt="Speek Logo">
+                        </div>
 
-            <!-- Navbar -->
-            <div class="flex flex-row w-full justify-items-stretch">
-                <h2 class="text-center place-self-center text-3xl font-bold leading-9 tracking-tight text-white">
-                    Chats
-                </h2>
+                        <!-- Profile Menu Container -->
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 
-                <!-- App Logo -->
-                <figure class="flex mx-auto sm:w-full">
-                    <img class="mx-auto w-20 h-20" src="{% static 'img/logo2.svg' %}" alt="speek-logo" />
-                </figure>
+                            <!-- Profile Menu -->
+                            <div class="relative ml-3">
+                                <div
+                                    onclick="myFunction();"
+                                >
+                                    <button
+                                        type="button"
+                                        class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2
+                                                focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                        id="user-menu-button"
+                                        aria-expanded="false"
+                                        aria-haspopup="true"
+                                    >
+                                        <!-- Profile Picture -->
+                                        <span class="absolute -inset-1.5"></span>
+                                        <span class="sr-only">Open user menu</span>
+                                        <img class="h-14 w-14 rounded-full" src="{{ user.profile.image.url }}" alt="">
+                                    </button>
+                                </div>
 
-                <!-- User Icon, Username, Logout button -->
-                <div class="flex flex-row justify-between">
+                                <div
+                                    id="profile-menu"
+                                    class="absolute right-0 z-10 mt-8 mr-4 md:mr-8 w-52 origin-top-right rounded-sm
+                                           bg-white py-0 shadow-min ring-1 ring-black ring-opacity-5 focus:outline-none
+                                           hidden text-center"
+                                    role="menu"
+                                    aria-orientation="vertical"
+                                    aria-labelledby="user-menu-button"
+                                    tabindex="-1"
+                                >
+                                    <!-- Profile Page -->
+                                    <a
+                                        href="{% url 'chat:chat-userprofile' user.id %}"
+                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full hover:bg-gray-100"
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        id="user-menu-item-0"
+                                    >
+                                        <span>{{ request.user|title }}'s Profile</span>
+                                    </a>
 
-                    <!-- User icon -->
-                    <div class="flex text-white space-x-4 bg-transparent rounded-sm cursor-pointer
-                                justify-center md:flex-row hover:bg-blue-400 p-2">
-                        <a href="{% url 'chat:chat-userprofile' user.id %}"
-                           class="flex flex-row justify-between items-center">
+                                    <!-- Change Password -->
+                                    <a
+                                        href="#"
+                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full hover:bg-gray-100"
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        id="user-menu-item-1"
+                                    >
+                                        <span>Change Password</span>
+                                    </a>
 
-                            <!-- Thumbnail of Profile Picture -->
-                            <div class="w-16 h-16">
-                                <img class="w-full h-full rounded-full" src="{{ user.profile.image.url }}" />
+                                    <!-- Logout Button -->
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        id="user-menu-item-2"
+                                        class="cursor-pointer w-full hover:bg-blue-100"
+                                    >
+                                        <form method="POST" action="{% url 'userlogout' %}">
+                                            {% csrf_token %}
+                                            <input
+                                                type="submit"
+                                                value="Sign Out"
+                                                class="block px-4 py-2 text-lg text-blue-700 font-semibold
+                                                       cursor-pointer text-center mx-auto"
+                                            >
+                                        </form>
+                                    </button>
+
+                                    <!-- Delete Account -->
+                                    <button
+                                        role="menuitem"
+                                        tabindex="-1"
+                                        id="user-menu-item-3"
+                                        class="cursor-pointer w-full hover:bg-red-100"
+                                    >
+                                        <form method="POST" action="">
+                                            {% csrf_token %}
+                                            <input
+                                                type="submit"
+                                                value="Delete Account"
+                                                class="block px-4 py-2 text-lg text-red-600 font-semibold
+                                                       cursor-pointer text-center mx-auto"
+                                            >
+                                        </form>
+                                    </button>
+                                </div>
                             </div>
-
-                            <!-- Name of Logged In User -->
-                            <span class="flex ml-4 text-xl font-semibold">
-                                {{ request.user }}
-                            </span>
-                        </a>
+                        </div>
                     </div>
 
-                    <!-- Logout Button -->
-                    <form method="POST" action="{% url 'userlogout' %}" class="ml-6 inline-flex">
-                        {% csrf_token %}
-                        <button type="submit"
-                            class="w-auto rounded-sm px-0 text-lg text-center leading-6 text-white
-                                   shadow-sm hover:bg-none focus-visible:outline focus-visible:outline-2
-                                   focus-visible:outline-offset-2 focus-visible:outline-red-500"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="w-10 h-10 mx-auto font-extrabold text-red-400">
-                                <path fill-rule="evenodd" d="M16.5 3.75a1.5 1.5 0 0 1 1.5 1.5v13.5a1.5 1.5 0 0 1-1.5 1.5h-6a1.5 1.5 0 0 1-1.5-1.5V15a.75.75 0 0 0-1.5 0v3.75a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V5.25a3 3 0 0 0-3-3h-6a3 3 0 0 0-3 3V9A.75.75 0 1 0 9 9V5.25a1.5 1.5 0 0 1 1.5-1.5h6ZM5.78 8.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 0 0 0 1.06l3 3a.75.75 0 0 0 1.06-1.06l-1.72-1.72H15a.75.75 0 0 0 0-1.5H4.06l1.72-1.72a.75.75 0 0 0 0-1.06Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </form>
                 </div>
             </div>
         </nav>
 
         {% include 'snippets/messages.html' %}
 
-        <!-- chat container -->
-        <div id="chat" class="z-10 overflow-y-auto flex flex-1 flex-col pt-6 pb-6 mx-0">
+	    <!-- chat container -->
+        <div id="chat" class="overflow-y-auto flex flex-1 flex-col pt-6 pb-6 mx-0">
         </div>
 
-        <!-- Input and Submit -->
-        <div id="chat-input" class="z-50 sticky flex flex-row h-20 space-x-0 p-0">
+        <!-- Input and Send message button -->
+        <div id="chat-input" class="sticky flex flex-row h-16 space-x-0 p-0">
             <input id="chat-message-input"
                 name="message"
                 type="text"
