@@ -17,8 +17,13 @@ from django.contrib.auth.views import (
     LogoutView,
     PasswordResetView,
     PasswordResetConfirmView,
+    PasswordChangeView,
 )
-from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import (
+    PasswordResetForm,
+    SetPasswordForm,
+    PasswordChangeForm,
+)
 from django.http import HttpResponseRedirect
 from apps.users.forms import *
 
@@ -250,5 +255,40 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
 
     def form_invalid(self, form):
         for key, value in form.error_messages.items():
-            messages.error(self.request, f"{key}: {value}")
+            messages.error(self.request, f"{value}")
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class UserPasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name = "registration/password_change_form.html"
+    success_url = reverse_lazy("password_change_done")
+
+    def form_invalid(self, form):
+        for error in form.errors:
+            if error == "old_password":
+                messages.error(self.request, form.error_messages["password_incorrect"])
+            if error == "new_password1":
+                messages.error(self.request, form.error_messages["password_mismatch"])
+            if error == "new_password2":
+                messages.error(self.request, form.error_messages["password_mismatch"])
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+@login_required
+def delete_user(request, pk):
+    # get the return template to render
+    template = loader.get_template('delete-success.html')
+
+    # retrieve the form object
+    coopform = get_object_or_404(CoopForm, id=pk)
+
+    # save the society_name as context data
+    society_name = coopform.society_name
+
+    context = {'society_name': society_name}
+
+    # delete the form object
+    coopform.delete()
+
+    return HttpResponse(template.render(context, request))

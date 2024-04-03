@@ -31,9 +31,9 @@
 
                             <!-- Profile Menu -->
                             <div class="relative ml-3">
-                                <div
-                                    onclick="myFunction();"
-                                >
+
+                                <!-- Button to open the Profile Menu -->
+                                <div>
                                     <button
                                         type="button"
                                         class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2
@@ -49,6 +49,7 @@
                                     </button>
                                 </div>
 
+                                <!-- Profile Menu Items -->
                                 <div
                                     id="profile-menu"
                                     class="absolute right-0 z-10 mt-8 mr-4 md:mr-8 w-52 origin-top-right rounded-sm
@@ -62,7 +63,8 @@
                                     <!-- Profile Page -->
                                     <a
                                         href="{% url 'chat:chat-userprofile' user.id %}"
-                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full hover:bg-gray-100"
+                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full
+                                               font-semibold hover:bg-gray-100"
                                         role="menuitem"
                                         tabindex="-1"
                                         id="user-menu-item-0"
@@ -72,8 +74,9 @@
 
                                     <!-- Change Password -->
                                     <a
-                                        href="#"
-                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full hover:bg-gray-100"
+                                        href="{% url 'chat:password_change' %}"
+                                        class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full
+                                               font-semibold hover:bg-gray-100"
                                         role="menuitem"
                                         tabindex="-1"
                                         id="user-menu-item-1"
@@ -104,8 +107,8 @@
                                     <button
                                         role="menuitem"
                                         tabindex="-1"
-                                        id="user-menu-item-3"
-                                        class="cursor-pointer w-full hover:bg-red-100"
+                                        id="open-delete-modal"
+                                        class="cursor-pointer w-full hover:bg-red-200"
                                     >
                                         <form method="POST" action="">
                                             {% csrf_token %}
@@ -157,6 +160,12 @@
             </button>
         </div>
     </div>
+
+    <!-- Modal popup (Delete form) -->
+    {% include 'snippets/delete-modal.html' %}
+
+    <!-- JavaScript for delete modal popup -->
+    <script src="{% static 'js/delete-modal-popup.js' %}"></script>
 {% endblock %}
 
 {% block include_js %}

@@ -6,4 +6,5 @@
  submitButton.onclick = function(event) {
         signInText.style.display = "none";
         spinner.style.display = "block";
+        // submitButton.disabled = true;
  };
