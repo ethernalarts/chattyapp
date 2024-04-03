@@ -9,6 +9,7 @@ from django.views.generic import (
     UpdateView,
     DetailView,
     CreateView,
+    DeleteView,
 )
 
 from django.contrib.auth.decorators import login_required
@@ -275,20 +276,6 @@ class UserPasswordChangeView(PasswordChangeView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-@login_required
-def delete_user(request, pk):
-    # get the return template to render
-    template = loader.get_template('delete-success.html')
-
-    # retrieve the form object
-    coopform = get_object_or_404(CoopForm, id=pk)
-
-    # save the society_name as context data
-    society_name = coopform.society_name
-
-    context = {'society_name': society_name}
-
-    # delete the form object
-    coopform.delete()
-
-    return HttpResponse(template.render(context, request))
+class DeleteUserView(LoginRequiredMixin, DeleteView):
+    success_url = reverse_lazy("account_deleted")
+    model = User

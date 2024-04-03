@@ -3,6 +3,7 @@ from django.urls import path, include
 from apps.chat import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -47,6 +48,15 @@ urlpatterns = [
             template_name="registration/password_reset_complete.html"
         ),
         name="password_reset_complete",
+    ),
+
+    # account deleted successfully
+    path(
+        "account_deleted/",
+        TemplateView.as_view(
+            template_name="account_deleted_success.html"
+        ),
+        name="account_deleted",
     ),
 ]
 

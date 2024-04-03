@@ -30,7 +30,7 @@ urlpatterns = [
     # delete account
     path(
         "delete_account/<int:pk>/",
-        views.delete_user,
+        views.DeleteUserView.as_view(),
         name="delete-user",
     ),
 ]

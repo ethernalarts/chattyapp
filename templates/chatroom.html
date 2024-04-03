@@ -110,21 +110,17 @@
                                         id="open-delete-modal"
                                         class="cursor-pointer w-full hover:bg-red-200"
                                     >
-                                        <form method="POST" action="">
-                                            {% csrf_token %}
-                                            <input
-                                                type="submit"
-                                                value="Delete Account"
-                                                class="block px-4 py-2 text-lg text-red-600 font-semibold
-                                                       cursor-pointer text-center mx-auto"
-                                            >
-                                        </form>
+                                        <span
+                                            class="block px-4 py-2 text-lg text-red-600 font-semibold
+                                                   cursor-pointer text-center mx-auto"
+                                        >
+                                            Delete Account
+                                        </span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </nav>
@@ -149,10 +145,10 @@
 
             <!-- Send Message button -->
             <button id="chat-message-submit"
-                    type="submit"
-                    class="w-1/6 rounded-none bg-blue-600 px-3 py-4 text-xl text-center font-semibold leading-6
-                           text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2
-                           focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                type="submit"
+                class="w-1/6 rounded-none bg-blue-600 px-3 py-4 text-xl text-center font-semibold leading-6
+                       text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2
+                       focus-visible:outline-offset-2 focus-visible:outline-indigo-600 border-2 border-blue-600"
             >
                 <span class="text-xl md:text-2xl font-semibold text-white">
                     Send
