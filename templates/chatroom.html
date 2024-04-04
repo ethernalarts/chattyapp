@@ -10,9 +10,9 @@
         <nav class="bg-blue-600">
             <div class="mx-auto w-full px-4 py-2">
                 <div class="relative flex h-16 items-center justify-between">
-                    <div class="flex flex-1 items-stretch justify-between justify-start">
+                    <div class="flex flex-1 items-center justify-between">
+                        <!-- Chat Room -->
                         <div class="flex items-center">
-                            <!-- Chat Room -->
                             <a
                                 href="{% url 'index' %}"
                                 class="bg-blue-900 text-white rounded-md px-4 py-3 text-xl font-medium"
@@ -22,12 +22,12 @@
                         </div>
 
                         <!-- App Logo -->
-                        <div class="flex mx-auto">
-                            <img class="h-32 w-32" src="{% static 'img/logo2.svg' %}" alt="Speek Logo">
+                        <div class="flex items-center">
+                            <img class="h-32 w-32" src="{% static 'img/logo-white.svg' %}" alt="Speek Logo">
                         </div>
 
                         <!-- Profile Menu Container -->
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                        <div class="inset-y-0 right-0 flex items-center sm:static sm:inset-auto">
 
                             <!-- Profile Menu -->
                             <div class="relative ml-3">
@@ -36,8 +36,9 @@
                                 <div>
                                     <button
                                         type="button"
-                                        class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2
-                                                focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                        class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none
+                                               focus:ring-2 focus:ring-white focus:ring-offset-2
+                                               focus:ring-offset-gray-800"
                                         id="user-menu-button"
                                         aria-expanded="false"
                                         aria-haspopup="true"
@@ -62,7 +63,7 @@
                                 >
                                     <!-- Profile Page -->
                                     <a
-                                        href="{% url 'chat:chat-userprofile' user.id %}"
+                                        href="{% url 'chat:chat-userprofile' request.user.id %}"
                                         class="block px-4 py-2 text-lg text-gray-700 cursor-pointer w-full
                                                font-semibold hover:bg-gray-100"
                                         role="menuitem"
@@ -144,11 +145,13 @@
             >
 
             <!-- Send Message button -->
-            <button id="chat-message-submit"
+            <button
+                id="chat-message-submit"
                 type="submit"
                 class="w-1/6 rounded-none bg-blue-600 px-3 py-4 text-xl text-center font-semibold leading-6
                        text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2
-                       focus-visible:outline-offset-2 focus-visible:outline-indigo-600 border-2 border-blue-600"
+                       focus-visible:outline-offset-2 focus-visible:outline-indigo-600 border-2 border-blue-600
+                       hover:border-blue-500"
             >
                 <span class="text-xl md:text-2xl font-semibold text-white">
                     Send
@@ -166,6 +169,7 @@
 
 {% block include_js %}
     {{ request.user.username|json_script:"request-user" }}
+    {{ request.user.profile.get_absolute_url|json_script:"request-user-profile" }}
 {% endblock %}
 
 {% block domready %}

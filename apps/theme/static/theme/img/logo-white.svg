@@ -7,7 +7,7 @@
       }
 
       .cls-2, .cls-3 {
-        fill: #1f2937;
+        fill: #fff;
         font-family: Oswald-Bold, Oswald;
         font-size: 276.84px;
         font-weight: 700;
@@ -17,12 +17,12 @@
         fill: #0391fd;
       }
 
-      .cls-5 {
-        fill: #1e3a8a;
-      }
-
       .cls-3 {
         letter-spacing: -.04em;
+      }
+
+      .cls-5 {
+        fill: #1e3a8a;
       }
     </style>
   </defs>

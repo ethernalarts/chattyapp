@@ -34,7 +34,7 @@ def index(request):
     return HttpResponseRedirect(reverse("chat:chat-room"))
 
 
-class ChatRoom(TemplateView):
+class ChatRoom(LoginRequiredMixin, TemplateView):
     template_name = "chatroom.html"
 
 

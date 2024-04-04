@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const input = document.querySelector('#chat-message-input');
     const submitButton = document.querySelector('#chat-message-submit');
     const requestUser = JSON.parse(document.getElementById('request-user').textContent);
+    const requestUserProfile = JSON.parse(document.getElementById('request-user-image').textContent);
 
     chatSocket.onmessage = function(event) {
         const data = JSON.parse(event.data);
@@ -19,11 +20,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		const datetime = new Date(data.datetime).toLocaleString('en', dateOptions);
 		const isMe = data.user === requestUser;
 		const source = isMe ? 'ml-auto mr-4 text-gray-100 bg-green-800' : 'float-left ml-4 text-gray-800 bg-gray-400';
-		const name = isMe ? 'Me' : data.user;
+		const name = isMe ? data.user : data.user;
 
-        chat.innerHTML += '<div class="w-full max-w-md md:max-w-2xl rounded-md mb-2 p-4 pb-2 pt-2'
+        chat.innerHTML += '<div class="w-full max-w-sm md:max-w-2xl rounded-md mb-2 p-4 pb-2 pt-2'
                         + ' text-md font-semibold ' + source + '">'
-                        + '<span class="font-bold">' + name + '</span><br>'
+                        + '<span class="font-bold">' + '<a href="'+requestUserProfile+'">'+ name + '</a>' + '</span><br>'
                         + data.message
                         + '<br><span class="text-gray-50 text-sm italic float-right">' + datetime + '</span><br>'
                         + '</div>';
