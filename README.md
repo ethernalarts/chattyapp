@@ -1,0 +1,9 @@
+Chat Application using Django Channels/PostgreSQL.
+
+To run the project,
+
+1. Activate the virtual environment.
+2. Install the requirements.txt file.
+3. Run the command "python manage.py runserver" to get the server running.
+4. Open the link: http://127.0.0.1:8000/ and log in.
+5. Open the same link on multiple tabs/windows to read and send messages from several tabs/windows.
