@@ -7,3 +7,6 @@ To run the project,
 3. Run the command "python manage.py runserver" to get the server running.
 4. Open the link: http://127.0.0.1:8000/ and log in.
 5. Open the same link on multiple tabs/windows to read and send messages from several tabs/windows.
+
+
+<img width="960" alt="ScreenShot_20240405104859" src="https://github.com/ethernalarts/chattyapp/assets/51105148/8cfec8ff-3c46-4f13-8a46-cdf928089b3c">
