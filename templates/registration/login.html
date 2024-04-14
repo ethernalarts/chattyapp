@@ -9,14 +9,14 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'snippets/messages.html' %}
+
     <div class="bg-gray-100 bg-fixed min-h-screen w-full px-2 md:px-6 py-8 mx-auto">
 
         <!-- App Logo -->
         <figure class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img class="mx-auto w-24 h-24 w-auto" src="{% static 'img/logo2.svg' %}" alt="chatty-logo" />
         </figure>
-
-        {% include 'snippets/messages.html' %}
 
         <h2 class="mt-20 text-center text-3xl font-bold leading-9 tracking-tight text-gray-800">
             Sign In to start chatting

@@ -51,7 +51,7 @@ class ChatLoginView(LoginView):
             user = form.get_user()
             login(self.request, user)
             username = User.objects.get(id=self.request.user.id).username
-            messages.success(self.request, f"Welcome, {str(username)}")
+            messages.success(self.request, f"Welcome, {str(username).title()}")
             return HttpResponseRedirect(self.get_success_url())
         except ObjectDoesNotExist:
             messages.error(self.request, "This user does not exist")
@@ -94,21 +94,17 @@ class CreateAccountView(CreateView):
         password1 = self.request.POST.get("password1")
         password2 = self.request.POST.get("password2")
 
-        if password1 != password2:
-            messages.error(
-                self.request, "Password Mismatch: The two password fields didn't match "
+        if password1 == password2:
+            return self.form_valid(form) if form.is_valid() else self.form_invalid(form)
+        messages.error(
+            self.request, "Password Mismatch: The two password fields didn't match "
+        )
+        return self.render_to_response(
+            self.get_context_data(
+                userform=self.form_class(self.request.POST),
+                profileform=self.second_form_class(self.request.POST),
             )
-            return self.render_to_response(
-                self.get_context_data(
-                    userform=self.form_class(self.request.POST),
-                    profileform=self.second_form_class(self.request.POST),
-                )
-            )
-        else:
-            if form.is_valid():
-                return self.form_valid(form)
-            else:
-                return self.form_invalid(form)
+        )
 
     def form_valid(self, form):
         username = form.cleaned_data.get("username")
@@ -117,15 +113,14 @@ class CreateAccountView(CreateView):
             self.request.POST, self.request.FILES, instance=user.profile
         )
 
-        if profile_form.is_valid():
-            profile_form.save()
-            messages.success(
-                self.request,
-                f"Welcome, {str(username)}. Your account has been created, please log in to start chatting",
-            )
-            return HttpResponseRedirect(self.success_url)
-        else:
+        if not profile_form.is_valid():
             return self.form_invalid(profile_form)
+        profile_form.save()
+        messages.success(
+            self.request,
+            f"Welcome, {str(username)}. Your account has been created, please log in to start chatting",
+        )
+        return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
         for error in form.non_field_errors():
@@ -147,8 +142,8 @@ class ProfileView(DetailView):
     def get_object(self, queryset=None):
         try:
             return User.objects.get(id=self.kwargs["pk"])
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist("User not found")
+        except ObjectDoesNotExist as e:
+            raise ObjectDoesNotExist("User not found") from e
 
     def get_context_data(self, **kwargs):
         context = super(ProfileView, self).get_context_data(**kwargs)
@@ -172,8 +167,8 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         try:
             return User.objects.get(id=self.kwargs["pk"])
-        except ObjectDoesNotExist:
-            raise ObjectDoesNotExist("User not found")
+        except ObjectDoesNotExist as e:
+            raise ObjectDoesNotExist("User not found") from e
 
     def get_success_url(self):
         return self.get_object().profile.get_absolute_url()
@@ -191,12 +186,9 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(self.request.POST, instance=self.request.user)
+        form = self.form_class(self.request.POST or None, instance=self.request.user)
 
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        return self.form_valid(form) if form.is_valid() else self.form_invalid(form)
 
     def form_valid(self, form):
         userdata = form.save(commit=False)
@@ -207,13 +199,12 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
             instance=self.request.user.profile,
         )
 
-        if profileform.is_valid():
-            profiledata = profileform.save(commit=False)
-            profiledata.save()
-            messages.success(self.request, "Your profile has been updated")
-            return HttpResponseRedirect(self.success_url)
-        else:
+        if not profileform.is_valid():
             return self.form_invalid(profileform)
+        profiledata = profileform.save(commit=False)
+        profiledata.save()
+        messages.success(self.request, "Your profile has been updated")
+        return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):
         for error in form.non_field_errors():
@@ -243,10 +234,7 @@ class UserPasswordResetView(PasswordResetView):
                 "No User found with this email address. Please check and try again",
             )
             return self.form_invalid(form)
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        return self.form_valid(form) if form.is_valid() else self.form_invalid(form)
 
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
@@ -256,7 +244,7 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
 
     def form_invalid(self, form):
         for key, value in form.error_messages.items():
-            messages.error(self.request, f"{value}")
+            messages.error(self.request, f"{key}: {value}")
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -267,12 +255,10 @@ class UserPasswordChangeView(PasswordChangeView):
 
     def form_invalid(self, form):
         for error in form.errors:
-            if error == "old_password":
+            if error in ["new_password1", "new_password2"]:
+                messages.error(self.request, form.error_messages["password_mismatch"])
+            elif error == "old_password":
                 messages.error(self.request, form.error_messages["password_incorrect"])
-            if error == "new_password1":
-                messages.error(self.request, form.error_messages["password_mismatch"])
-            if error == "new_password2":
-                messages.error(self.request, form.error_messages["password_mismatch"])
         return self.render_to_response(self.get_context_data(form=form))
 
 

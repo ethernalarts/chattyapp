@@ -8,8 +8,8 @@
 				{% if message.tags == 'success' %}
 					<div
 						id="toast-success"
-						class="error-message flex justify-between items-center w-full p-4 rounded-sm drop-shadow-xl
-							   flex-row mt-6 -mb-2 space-x-8 mx-auto text-gray-700 bg-white max-w-md md:max-w-lg"
+						class="error-message flex justify-center items-center w-full p-4 rounded-sm drop-shadow-xl
+							   flex-row space-x-4 mx-auto text-gray-700 bg-white w-full"
 						 role="alert"
 					>
 
@@ -43,8 +43,8 @@
 				{% if message.tags == 'error' %}
 					<div
 						id="toast-error"
-						class="error-message flex justify-between items-center w-full p-4 rounded-sm drop-shadow-xl
-							   flex-row my-6 -mb-2 space-x-8 mx-auto text-white bg-red-700 max-w-md md:max-w-lg"
+						class="error-message flex justify-center items-center w-full p-4 rounded-sm drop-shadow-xl
+							   flex-row space-x-4 mx-auto text-white bg-red-700 w-full"
 						role="alert"
 					>
 
@@ -60,7 +60,7 @@
 							</div>
 
 							<!-- error message -->
-							<span class="text-lg text-center font-medium justify-self-center mx-auto">
+							<span class="text-lg text-center max-w-md font-medium justify-self-center mx-auto">
 								{{ message }}
 							</span>
 

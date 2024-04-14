@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const input = document.querySelector('#chat-message-input');
     const submitButton = document.querySelector('#chat-message-submit');
     const requestUser = JSON.parse(document.getElementById('request-user').textContent);
-    const requestUserProfile = JSON.parse(document.getElementById('request-user-image').textContent);
+    // const requestUserProfile = JSON.parse(document.getElementById('request-user-image').textContent);
 
     chatSocket.onmessage = function(event) {
         const data = JSON.parse(event.data);
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         chat.innerHTML += '<div class="w-full max-w-sm md:max-w-2xl rounded-md mb-2 p-4 pb-2 pt-2'
                         + ' text-md font-semibold ' + source + '">'
-                        + '<span class="font-bold">' + '<a href="'+requestUserProfile+'">'+ name + '</a>' + '</span><br>'
+                        + '<span class="font-bold">' + '<a href="">'+ name + '</a>' + '</span><br>'
                         + data.message
                         + '<br><span class="text-gray-50 text-sm italic float-right">' + datetime + '</span><br>'
                         + '</div>';
