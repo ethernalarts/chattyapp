@@ -12,6 +12,10 @@ To run the project,
 
 <img width="960" alt="ScreenShot_20240405104859" src="https://github.com/ethernalarts/chattyapp/assets/51105148/8cfec8ff-3c46-4f13-8a46-cdf928089b3c">
 
+<img width="954" alt="ScreenShot_20240418095557" src="https://github.com/ethernalarts/chattyapp/assets/51105148/bf37902e-6ca3-46d5-8364-01586967ae82">
+
+<img width="954" alt="ScreenShot_20240418095732" src="https://github.com/ethernalarts/chattyapp/assets/51105148/29022bd8-194d-4748-b45e-b4311e67b140">
+
 <img width="960" alt="ScreenShot_20240405104920" src="https://github.com/ethernalarts/chattyapp/assets/51105148/7c06d8e9-ebc8-4589-b9ef-6c0ef5571729">
 
 <img width="960" alt="ScreenShot_20240405105000" src="https://github.com/ethernalarts/chattyapp/assets/51105148/403e5666-f74f-42c2-9b02-29da8ecb44da">
@@ -25,10 +29,6 @@ To run the project,
 <img width="960" alt="ScreenShot_20240405111019" src="https://github.com/ethernalarts/chattyapp/assets/51105148/b81ff858-3c71-469a-81e2-c328e7b7112c">
 
 <img width="960" alt="ScreenShot_20240405111137" src="https://github.com/ethernalarts/chattyapp/assets/51105148/8a9a4b9c-83eb-4eb9-9504-a50f6f8acbe1">
-
-<img width="960" alt="ScreenShot_20240405111756" src="https://github.com/ethernalarts/chattyapp/assets/51105148/5cef1928-38cd-459c-b927-8ab19e6406c5">
-
-<img width="954" alt="ScreenShot_20240405111806" src="https://github.com/ethernalarts/chattyapp/assets/51105148/95253723-2c35-467a-8b16-cac9a11b561d">
 
 <img width="954" alt="ScreenShot_20240405112017" src="https://github.com/ethernalarts/chattyapp/assets/51105148/6c845de1-c00a-440c-886e-ebb4d9c6d2e2">
 
